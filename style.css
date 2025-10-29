@@ -1,1 +1,78 @@
+/* Simple responsive login panel styles */
+.login-panel {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fb 0%, #e9eef8 100%);
+    padding: 24px;
+    box-sizing: border-box;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(18, 38, 63, 0.08);
+    box-sizing: border-box;
+}
+
+.login-title {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    color: #102a43;
+}
+
+.login-label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #334e68;
+}
+
+.login-input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    border: 1px solid #d9e2ec;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #fff;
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #0b69ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-button[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.login-error {
+    margin: 0 0 12px 0;
+    padding: 10px;
+    background: #ffeceb;
+    color: #9b1d1d;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.login-footer {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 13px;
+}
 
