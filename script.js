@@ -1,102 +1,105 @@
-import React, { useState } from "react";
-import "./LoginPanel.css";
+// Enkel klientlogikk for input-validering, passordstyrke og UI
+const form = document.getElementById('loginForm');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const remember = document.getElementById('remember');
+const submitBtn = document.getElementById('submitBtn');
+const statusBox = document.getElementById('status');
+const bar = document.getElementById('bar');
+const togglePw = document.getElementById('togglePw');
+const eyeOpen = document.getElementById('eyeOpen');
+const eyeClosed = document.getElementById('eyeClosed');
+const clearEmail = document.getElementById('clearEmail');
+const forgot = document.getElementById('forgot');
+const loginDemo = document.getElementById('loginDemo');
 
-/*
-  Browser-friendly version of the LoginPanel component.
-  This file is loaded via <script type="text/babel"> in index.html (Babel does JSX transform in-browser).
-  It does not import CSS; style is linked from style.css already present in the workspace.
-*/
+// Aktiver/deaktiver knapp basert på gyldige felt
+function canSubmit(){
+  return email.validity.valid && password.value.length >= 8;
+}
+function updateSubmit(){
+  submitBtn.disabled = !canSubmit();
+}
+email.addEventListener('input', updateSubmit);
+password.addEventListener('input', () => { updateSubmit(); updateStrength(); });
 
-export default function LoginPanel({ onSuccess }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setError("");
-        if (!email || !password) {
-            setError("Please enter email and password");
-            return;
-        }
-        setLoading(true);
-        try {
-            const res = await fetch("/api/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data?.message || "Login failed");
-            onSuccess?.(data);
-        } catch (err) {
-            setError(err?.message || String(err));
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    return (
-        <div className="login-panel">
-            <form className="login-card" onSubmit={handleSubmit}>
-                <h2 className="login-title">Sign in</h2>
-                {error && <div className="login-error">{error}</div>}
-                <label className="login-label">
-                    Email
-                    <input
-                        className="login-input"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        autoComplete="email"
-                        required
-                    />
-                </label>
-                <label className="login-label">
-                    Password
-                    <input
-                        className="login-input"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password"
-                        required
-                    />
-                </label>
-                <button className="login-button" type="submit" disabled={loading}>
-                    {loading ? "Signing in..." : "Sign in"}
-                </button>
-                <div className="login-footer">
-                    <a href="/signup">Create an account</a>
-                </div>
-            </form>
-        </div>
-    );
+// Passordstyrke (enkel heuristikk)
+function updateStrength(){
+  const v = password.value;
+  let score = 0;
+  if(v.length >= 8) score++;
+  if(/[A-ZÅØÆ]/.test(v)) score++;
+  if(/[a-zåøæ]/.test(v)) score++;
+  if(/[0-9]/.test(v)) score++;
+  if(/[^A-Za-z0-9]/.test(v)) score++;
+  const pct = Math.min(100, score * 20);
+  bar.style.width = pct + '%';
+  bar.style.backgroundColor = pct < 40 ? 'var(--danger)' : pct < 80 ? 'var(--warn)' : 'var(--ok)';
 }
 
-// Small demo app that shows result on successful login
-function App() {
-    const [user, setUser] = useState(null);
+// Vis/Skjul passord
+togglePw.addEventListener('click', () => {
+  const isPw = password.type === 'password';
+  password.type = isPw ? 'text' : 'password';
+  eyeOpen.style.display = isPw ? 'none' : '';
+  eyeClosed.style.display = isPw ? '' : 'none';
+  password.focus();
+});
 
-    return (
-        <div>
-            {!user ? (
-                <LoginPanel onSuccess={(data) => {
-                    // demo: show returned user and keep it in state
-                    setUser(data?.user ?? { email: data?.email ?? "unknown" });
-                }} />
-            ) : (
-                <div style={{ padding: 24 }}>
-                    <h2>Welcome</h2>
-                    <p>Signed in as: <strong>{user.email}</strong></p>
-                    <button onClick={() => setUser(null)}>Sign out</button>
-                </div>
-            )}
-        </div>
-    );
+// Tøm e‑post
+clearEmail.addEventListener('click', () => {
+  email.value = '';
+  updateSubmit();
+  email.focus();
+});
+
+// Simulert «Glemt passord?»
+forgot.addEventListener('click', (e) => {
+  e.preventDefault();
+  showStatus('Sjekk e‑posten din for instruksjoner om tilbakestilling av passord (simulert).', 'ok');
+});
+
+// Demo-innlogging (fyller feltene)
+loginDemo.addEventListener('click', () => {
+  email.value = 'demo@eksempel.no';
+  password.value = 'DemoPass123!';
+  remember.checked = true;
+  updateStrength();
+  updateSubmit();
+  showStatus('Demofelter fylt inn. Trykk «Logg inn».', 'ok');
+});
+
+// Skjema‑send (simulert autentisering)
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if(!canSubmit()){
+    showStatus('Vennligst fyll inn gyldig e‑post og passord (minst 8 tegn).', 'err');
+    return;
+  }
+
+  // Vis «laster…»
+  const prev = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<span class="spinner"></span>Logger inn…';
+  submitBtn.disabled = true;
+
+  // Simuler nettverkskall
+  await new Promise(r => setTimeout(r, 900));
+
+  // Suksess (her kan du bytte ut med ekte API‑kall)
+  showStatus('Innlogging vellykket! Du blir omdirigert…', 'ok');
+
+  // Eksempel på redirect
+  setTimeout(() => {
+    submitBtn.innerHTML = prev;
+    // window.location.href = '/dashboard';
+  }, 700);
+});
+
+function showStatus(msg, kind){
+  statusBox.textContent = msg;
+  statusBox.className = 'status show ' + (kind === 'ok' ? 'ok' : 'err');
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
-
+// Init
+updateSubmit();
+updateStrength();

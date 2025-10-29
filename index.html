@@ -1,21 +1,68 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="no">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login Panel Demo</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logg inn</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="root"></div>
+  <main class="card" role="main" aria-label="Innloggingskort">
+    <header>
+      <div class="title">Logg inn</div>
+      <div class="subtitle">Velkommen tilbake. Skriv inn detaljene dine.</div>
+    </header>
 
-  <!-- React + ReactDOM + Babel for quick development (no bundler required) -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <form id="loginForm" novalidate>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
 
-  <!-- App script (JSX -> compiled by Babel in browser) -->
-  <script type="text/babel" src="./script.js"></script>
+      <div class="field">
+        <label for="email" class="label">E‑post</label>
+        <div class="control">
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="username" placeholder="du@eksempel.no" required aria-required="true" />
+          <button class="icon-btn" type="button" title="Tøm e‑post" aria-label="Tøm e‑post" id="clearEmail" tabindex="-1">
+            <!-- Papirkurv-ikon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password" class="label">Passord</label>
+        <div class="control">
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required aria-required="true" />
+          <button class="icon-btn" type="button" title="Vis/Skjul passord" aria-label="Vis eller skjul passord" id="togglePw">
+            <svg id="eyeOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeClosed" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.83 21.83 0 0 1 5.06-6.94"/><path d="M1 1l22 22"/><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.83 21.83 0 0 1-3.11 4.88"/><path d="M14.12 14.12A3 3 0 0 1 9.88 9.88"/></svg>
+          </button>
+        </div>
+        <div class="strength" aria-hidden="true"><div class="bar" id="bar"></div></div>
+      </div>
+
+      <div class="row">
+        <label class="checkbox" for="remember">
+          <input id="remember" type="checkbox" />
+          Husk meg
+        </label>
+        <a class="link" href="#" id="forgot">Glemt passord?</a>
+      </div>
+
+      <button class="submit" id="submitBtn" type="submit" disabled>
+        Logg inn
+      </button>
+
+      <div class="divider"><span>eller</span></div>
+
+      <button class="ghost" type="button" id="loginDemo" aria-label="Prøv demoinnlogging">
+        Bruk demoinnlogging
+      </button>
+    </form>
+
+    <footer>
+      <small>Tips: bruk minst 8 tegn, med tall og bokstaver.</small>
+    </footer>
+  </main>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
-
