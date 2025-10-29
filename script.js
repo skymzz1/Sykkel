@@ -31,7 +31,7 @@ export default function LoginPanel({ onSuccess }) {
             if (!res.ok) throw new Error(data?.message || "Login failed");
             onSuccess?.(data);
         } catch (err) {
-            setError(err.message || String(err));
+            setError(err?.message || String(err));
         } finally {
             setLoading(false);
         }
